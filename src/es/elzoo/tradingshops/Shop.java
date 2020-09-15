@@ -139,26 +139,25 @@ public class Shop {
 	public static void tickShops() {
 		List<Shop> shopDelete = new ArrayList<>();
 
-		for(Shop shop1 : shops) {
-			if(shop1.hasExpired() || shop1.location.getWorld() == null) {
-				shopDelete.add(shop1);
+		for(Shop shop : shops) {
+			if(shop.hasExpired() || shop.location.getWorld() == null) {
+				shopDelete.add(shop);
 				continue;
 			}
 
-			if(!shop1.hasItems())
+			if(!shop.hasItems())
 				continue;
 
 			if(TradingShops.config.getBoolean("showParticles")) {
-				double x = shop1.location.getBlockX() + 0.5;
-				double y = shop1.location.getBlockY() + 1.25;
-				double z = shop1.location.getBlockZ() + 0.5;
-				shop1.location.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, x, y, z, 10, 0.1, 0.1, 0.1);
+				double x = shop.location.getBlockX() + 0.5;
+				double y = shop.location.getBlockY() + 1.25;
+				double z = shop.location.getBlockZ() + 0.5;
+				shop.location.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, x, y, z, 10, 0.1, 0.1, 0.1);
 			}
 		}
 
-		for(Shop shop : shopDelete) {
+		for(Shop shop : shopDelete)
 			shop.deleteShop();
-		}
 	}
 	
 	public static void loadData() throws Exception {
@@ -178,7 +177,7 @@ public class Shop {
 				List<ItemStack> itemsList = new ArrayList<>();
 				
 				JsonArray itemsArray = new JsonParser().parse(dataItems).getAsJsonArray();
-				for (JsonElement jsonItem : itemsArray) {
+				for(JsonElement jsonItem : itemsArray) {
 					String itemstackRaw = jsonItem.getAsString();
 					YamlConfiguration config = new YamlConfiguration();
 					try {
