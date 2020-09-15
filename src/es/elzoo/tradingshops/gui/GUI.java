@@ -40,7 +40,7 @@ public abstract class GUI {
 		ItemStack item = new ItemStack(material);
 		
 		ItemMeta meta = item.getItemMeta();
-		Objects.requireNonNull(meta).setDisplayName(ChatColor.RESET + number);
+		meta.setDisplayName(ChatColor.RESET + number);
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
