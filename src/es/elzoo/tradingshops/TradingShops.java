@@ -42,15 +42,15 @@ public class TradingShops extends JavaPlugin {
 		this.setupEconomy();
 		this.createConfig();
 
-		if(config.getString("shopBlock") == null) {
-			config.set("shopBlock", "minecraft:barrel");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] shopBlock cannot be empty! Reverting to default minecraft:barrel");
-			return;
-		}
-
-		if(config.getString("stockBlock") == null) {
-			config.set("stockBlock", "minecraft:composter");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] stockBlock cannot be empty! Reverting to default minecraft:composter");
+		if(config.getString("shopBlock") == null || config.getString("stockBlock") == null) {
+			if(config.getString("shopBlock") == null) {
+				config.set("shopBlock", "minecraft:barrel");
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] shopBlock cannot be empty! Reverting to default minecraft:barrel");
+			}
+			if(config.getString("stockBlock") == null) {
+				config.set("stockBlock", "minecraft:composter");
+				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] stockBlock cannot be empty! Reverting to default minecraft:composter");
+			}
 			return;
 		}
 
