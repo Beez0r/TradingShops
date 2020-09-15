@@ -1,7 +1,6 @@
 package es.elzoo.tradingshops;
 
 import org.bukkit.ChatColor;
-import java.util.Objects;
 
 public enum Messages {
 	NO_PERMISSION("noPermissions"),
@@ -44,6 +43,8 @@ public enum Messages {
 	@Override
 	public String toString() {
 		String trans = TradingShops.config.getString(msg);
-		return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(trans));
+		if(trans == null)
+			trans = "&cError retrieving config message!";
+		return ChatColor.translateAlternateColorCodes('&', trans);
 	}
 }

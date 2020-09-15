@@ -1,6 +1,5 @@
 package es.elzoo.tradingshops.inventories;
 
-import java.util.Objects;
 import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,6 +62,6 @@ public class InvShop extends GUI {
 		if(pl == null)
 			return msg.replaceAll("%player%", "<unknown>");
 		
-		return msg.replaceAll("%player%", Objects.requireNonNull(pl.getName()));
+		return msg.replaceAll("%player%", pl.getName());
 	}
 }

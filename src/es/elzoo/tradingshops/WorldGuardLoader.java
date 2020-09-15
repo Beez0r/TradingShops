@@ -33,13 +33,15 @@ public class WorldGuardLoader {
 		if(FLAG_TRADE != null && TradingShops.config.getBoolean("enableWorldGuardFlag")) {
 			RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 			RegionManager regions = container.get(new BukkitWorld(block.getWorld()));
-			Objects.requireNonNull(regions).getRegions().forEach((id, region) -> {
-				if(region.getId().equalsIgnoreCase(ProtectedRegion.GLOBAL_REGION) || region.contains(block.getX(), block.getY(), block.getZ())) {
-					if((region.getFlag(TradingShops.wgLoader.getFlagTrade().get()) != null) && Objects.equals(region.getFlag(TradingShops.wgLoader.getFlagTrade().get()), StateFlag.State.ALLOW)) {
-						isShopLoc.set(true);
+			if(regions != null) {
+				regions.getRegions().forEach((id, region) -> {
+					if(region.getId().equalsIgnoreCase(ProtectedRegion.GLOBAL_REGION) || region.contains(block.getX(), block.getY(), block.getZ())) {
+						if((region.getFlag(TradingShops.wgLoader.getFlagTrade().get()) != null) && Objects.equals(region.getFlag(TradingShops.wgLoader.getFlagTrade().get()), StateFlag.State.ALLOW)) {
+							isShopLoc.set(true);
+						}
 					}
-				}
-			});
+				});
+			}
 		} else {
 			isShopLoc.set(true);
 		}

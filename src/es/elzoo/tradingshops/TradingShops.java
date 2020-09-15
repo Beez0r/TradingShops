@@ -8,9 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,9 +42,21 @@ public class TradingShops extends JavaPlugin {
 		this.setupEconomy();
 		this.createConfig();
 
+		if(config.getString("shopBlock") == null) {
+			config.set("shopBlock", "minecraft:barrel");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] shopBlock cannot be empty! Reverting to default minecraft:barrel");
+			return;
+		}
+
+		if(config.getString("stockBlock") == null) {
+			config.set("stockBlock", "minecraft:composter");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] stockBlock cannot be empty! Reverting to default minecraft:composter");
+			return;
+		}
+
 		getServer().getPluginManager().registerEvents(new EventShop(), this);
 		getServer().getPluginManager().registerEvents(new GUIEvent(), this);
-		Objects.requireNonNull(getCommand("tradeshop")).setExecutor(new CommandShop());
+		getCommand("tradeshop").setExecutor(new CommandShop());
 
 		try {
 			connection = DriverManager.getConnection(chainConnect);
@@ -205,6 +217,9 @@ public class TradingShops extends JavaPlugin {
 					config.set("configVersion", 2.1);
 					config.save(configFile);
 				case "2.1":
+					config.set("enableStockBlock", true);
+					config.set("enableShopBlock", true);
+				case "2.2":
 					break;
 			}
 		} catch(IOException | InvalidConfigurationException e) {

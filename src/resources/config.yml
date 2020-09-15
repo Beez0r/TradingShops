@@ -1,11 +1,17 @@
 # The block you want to use as the shop.
 shopBlock: 'minecraft:barrel'
 
+# Allows the use of shop blocks. Setting to false will disable players using a block to open shop GUI
+enableShopBlock: true
+
 # The block you want to open the stock GUI.
 stockBlock: 'minecraft:composter'
 
 # Allows to open the stock GUI using /shop stock.
 enableStockCommand: true
+
+# Allows the use of stock blocks. Setting to false will disable players using a block to open stock GUI
+enableStockBlock: true
 
 # Number of pages to have in the stock GUI.
 stockPages: 5
@@ -80,4 +86,4 @@ playerInventoryFull: "&cYour inventory is FULL! Cannot buy any items!"
 noPlayerShop: "&cPlayer name does not exist! Cannot list player shop!"
 
 # Do not edit this
-configVersion: 2.1
+configVersion: 2.2

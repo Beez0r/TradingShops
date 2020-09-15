@@ -15,7 +15,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -28,10 +27,13 @@ public class EventShop implements Listener {
 	
 	@EventHandler
 	public void onPlayerInteractStock(PlayerInteractEvent event) {
+		if(!TradingShops.config.getBoolean("enableStockBlock"))
+			return;
+
 		Block block = event.getClickedBlock();
 		String stockBlock = TradingShops.config.getString("stockBlock");
 
-		Material match = Material.matchMaterial(Objects.requireNonNull(stockBlock));
+		Material match = Material.matchMaterial(stockBlock);
 		if(match == null) {
 			try {
 				match = Material.matchMaterial(stockBlock.split("minecraft:")[1].toUpperCase());
@@ -75,10 +77,13 @@ public class EventShop implements Listener {
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
+		if(!TradingShops.config.getBoolean("enableShopBlock"))
+			return;
+
 		Block block = event.getClickedBlock();
 		String shopBlock = TradingShops.config.getString("shopBlock");
 
-		Material match = Material.matchMaterial(Objects.requireNonNull(shopBlock));
+		Material match = Material.matchMaterial(shopBlock);
 		if(match == null) {
 			try {
 				match = Material.matchMaterial(shopBlock.split("minecraft:")[1].toUpperCase());
