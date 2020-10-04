@@ -42,16 +42,13 @@ public class TradingShops extends JavaPlugin {
 		this.setupEconomy();
 		this.createConfig();
 
-		if(config.getString("shopBlock") == null || config.getString("stockBlock") == null) {
-			if(config.getString("shopBlock") == null) {
-				config.set("shopBlock", "minecraft:barrel");
-				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] shopBlock cannot be empty! Reverting to default minecraft:barrel");
-			}
-			if(config.getString("stockBlock") == null) {
-				config.set("stockBlock", "minecraft:composter");
-				Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] stockBlock cannot be empty! Reverting to default minecraft:composter");
-			}
-			return;
+		if(config.getString("shopBlock") == null) {
+			config.set("shopBlock", "minecraft:barrel");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] shopBlock cannot be empty! Reverting to default minecraft:barrel");
+		}
+		if(config.getString("stockBlock") == null) {
+			config.set("stockBlock", "minecraft:composter");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TradingShops] stockBlock cannot be empty! Reverting to default minecraft:composter");
 		}
 
 		getServer().getPluginManager().registerEvents(new EventShop(), this);
@@ -112,13 +109,13 @@ public class TradingShops extends JavaPlugin {
 			stmtsPatches.add(connection.prepareStatement("ALTER TABLE zooMercaTiendasFilas ADD COLUMN broadcast BOOLEAN DEFAULT 0"));
 			stmtsPatches.add(connection.prepareStatement("ALTER TABLE zooMercaStocks ADD COLUMN pag INTEGER DEFAULT 0"));
 			stmtsPatches.add(connection.prepareStatement("ALTER TABLE zooMercaTiendas ADD COLUMN admin BOOLEAN DEFAULT FALSE;"));
-		} catch(Exception e) { }
+		} catch(Exception ignored) { }
 
 		for(PreparedStatement stmtsPatch : stmtsPatches) {
 			try {
 				stmtsPatch.execute();
 				stmtsPatch.close();
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 		}
 	}
@@ -214,11 +211,21 @@ public class TradingShops extends JavaPlugin {
 					config.set("noPlayerShop", "&cPlayer name does not exist! Cannot list player shop!");
 				case "2.0":
 					config.set("remoteManage", true);
-					config.set("configVersion", 2.1);
-					config.save(configFile);
 				case "2.1":
 					config.set("enableStockBlock", true);
+					config.set("enableAdminShop", true);
 					config.set("enableShopBlock", true);
+					config.set("noPlayerFound", "&cNo stock can be found for given player!");
+					config.set("noRemoteManage", "&cRemote management of shops has been disabled!");
+					config.set("noShopFound", "&cNo shop found with given id!");
+					config.set("playerShopCreated", "&7Shop has been &aCREATED&7 for&a %p &7!");
+					config.set("shopIDDeleted", "&cShop id&a %id &chas been DELETED!");
+					config.set("shopIntegerError", "&cShop id must be an integer greater than 0!");
+					config.set("targetMismatch", "&cTargeted block must match shop block set in config!");
+					config.set("disabledShopBlock", "&cCannot create shop location when shop blocks are disabled!");
+					config.set("adminShopDisabled", "&cAdmin shops have been disabled, cannot create!");
+					config.save(configFile);
+					config.set("configVersion", 2.2);
 				case "2.2":
 					break;
 			}

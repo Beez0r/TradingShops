@@ -92,7 +92,7 @@ public class EventShop implements Listener {
 			}
 
 			if(match == null) {
-				match = Material.BARREL;
+				match = Material.JUKEBOX;
 			}
 		}
 

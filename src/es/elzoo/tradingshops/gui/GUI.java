@@ -2,7 +2,6 @@ package es.elzoo.tradingshops.gui;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -73,8 +72,8 @@ public abstract class GUI {
 		player.openInventory(inventory);
 		inventoriesOpen.put(player.getName(), this);
 		if(uuid != null) {
-			inShopInv.put(player, uuid);
-		} else { inShopInv.put(player, player.getUniqueId());  }
+			inShopInv.putIfAbsent(player, uuid);
+		} else { inShopInv.putIfAbsent(player, player.getUniqueId());  }
 	}
 
 	public void open(Player player) { open(player, null); }
