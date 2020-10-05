@@ -223,8 +223,8 @@ public class TradingShops extends JavaPlugin {
 					config.set("adminShopDisabled", "&cAdmin shops have been disabled, cannot create!");
 					config.set("existingShop","&cCannot create shop where existing shop is already located!");
 					config.set("noRemoteShops","&cRemote shopping has been disabled!");
-					config.save(configFile);
 					config.set("configVersion", 2.2);
+					config.save(configFile);
 				case "2.2":
 					break;
 			}
