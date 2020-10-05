@@ -19,6 +19,7 @@ public enum Messages {
 	SHOP_ID_INTEGER("shopIntegerError"),
 	SHOP_MAX("shopLimit"),
 	SHOP_NO_ITEMS("noItems"),
+	SHOP_NO_REMOTE("noRemoteShops"),
 	SHOP_NO_SELF("shopNotOwned"),
 	SHOP_NO_STOCK("noStock"),
 	SHOP_NO_STOCK_SHELF("noStockNotify"),

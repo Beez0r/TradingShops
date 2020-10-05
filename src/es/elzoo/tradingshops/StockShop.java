@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class StockShop {
 	private static final List<StockShop> stocks = new ArrayList<>();
-
 	private final UUID owner;
 	private final Inventory inventory;
 	private final int pag;
@@ -50,9 +49,8 @@ public class StockShop {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt != null) {
+				if(stmt != null)
 					stmt.close();
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -73,9 +71,8 @@ public class StockShop {
 
 			JsonArray items = new JsonArray();
 			for(ItemStack item : inventory.getContents()) {
-				if(item == null) {
+				if(item == null)
 					continue;
-				}
 
 				YamlConfiguration config = new YamlConfiguration();
 				item.serialize().forEach(config::set);
@@ -83,7 +80,6 @@ public class StockShop {
 				items.add(itemRaw);
 			}
 			String itemsJson = (new Gson()).toJson(items);
-
 			stmt.setString(1, owner.toString());
 			stmt.setString(2, itemsJson);
 			stmt.setInt(3, pag);
@@ -92,9 +88,8 @@ public class StockShop {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt != null) {
+				if(stmt != null)
 					stmt.close();
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -106,9 +101,8 @@ public class StockShop {
 	}
 	
 	public void setInventory(Inventory inventory) {
-		for(int i=0; i<45; i++) {
+		for(int i=0; i<45; i++)
 			this.inventory.setItem(i, inventory.getItem(i));
-		}
 	}
 
 	public UUID getOwner() {

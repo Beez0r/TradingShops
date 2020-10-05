@@ -17,12 +17,10 @@ public class Utils {
 		int max = TradingShops.config.getInt("stockPages");
 		for(int i=0; i<max; i++) {
 			Optional<StockShop> stockStore = StockShop.getStockShopByOwner(shop.getOwner(), i);
-			if(!stockStore.isPresent()) {
+			if(!stockStore.isPresent())
 				continue;
-			}
-			if(stockStore.get().getInventory().containsAtLeast(item, item.getAmount())) {
+			if(stockStore.get().getInventory().containsAtLeast(item, item.getAmount()))
 				return true;
-			}
 		}
 		return false;
 	}

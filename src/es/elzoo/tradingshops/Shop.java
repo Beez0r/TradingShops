@@ -64,19 +64,16 @@ public class Shop {
 					stmt.setString(1, locationRaw);
 					stmt.setString(2, owner.toString());
 					stmt.setBoolean(3, admin);
-					
 					stmt.executeUpdate();
 					ResultSet res = stmt.getGeneratedKeys();
-					if(res.next()) {
+					if(res.next())
 						shop.idTienda = res.getInt(1);
-					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
 					try {
-						if(stmt != null) {
+						if(stmt != null)
 							stmt.close();
-						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -98,9 +95,8 @@ public class Shop {
 	}
 
 	public static void getShopList(Player player, UUID sOwner, String pOwner) {
-		player.sendMessage(ChatColor.GOLD + "Found " + ChatColor.GREEN + getNumShops(sOwner) + ChatColor.GOLD + " shop(s) for player: " + ChatColor.GREEN + pOwner);
-		
 		boolean manage = TradingShops.config.getBoolean("remoteManage");
+		player.sendMessage(ChatColor.GOLD + "Found " + ChatColor.GREEN + getNumShops(sOwner) + ChatColor.GOLD + " shop(s) for player: " + ChatColor.GREEN + pOwner);
 		
 		shops.parallelStream()
 				.filter(s -> !s.admin && s.isOwner(sOwner))
@@ -112,7 +108,7 @@ public class Shop {
 						TextComponent message = new TextComponent(rawMessage);
 						
 						TextComponent manageText = new TextComponent(ChatColor.DARK_GRAY + " [" + ChatColor.GOLD + "MANAGE" + ChatColor.DARK_GRAY + "]");						
-						manageText.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/shop view "+s.idTienda));
+						manageText.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/shop manage "+s.idTienda));
 						manageText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.GOLD + "Manage your shop.")));						
 						message.addExtra(manageText);
 						
@@ -171,9 +167,7 @@ public class Shop {
 			while(dataStocks.next()) {
 				String ownerRaw = dataStocks.getString(1);
 				UUID owner = UUID.fromString(ownerRaw);
-				
 				String dataItems = dataStocks.getString(2);
-				
 				List<ItemStack> itemsList = new ArrayList<>();
 				
 				JsonArray itemsArray = new JsonParser().parse(dataItems).getAsJsonArray();
@@ -190,7 +184,6 @@ public class Shop {
 				}
 
 				int pag = dataStocks.getInt(3);
-				
 				StockShop stock = new StockShop(owner, pag);
 				stock.getInventory().setContents(itemsList.toArray(new ItemStack[0]));
 			}
@@ -203,20 +196,16 @@ public class Shop {
 				int y = Integer.parseInt(locationRaw[1]);
 				int z = Integer.parseInt(locationRaw[2]);
 				World world = Bukkit.getWorld(locationRaw[3]);
-				if(world == null) {
+				if(world == null)
 					continue;
-				}
 				
 				Location location = new Location(world, x, y, z);
-				
 				Optional<Shop> shop = Shop.getShopByLocation(location);
 				if(!shop.isPresent()) {
 					String ownerRaw = dataStore.getString(2);
-					UUID owner = UUID.fromString(ownerRaw);					
-					
+					UUID owner = UUID.fromString(ownerRaw);
 					int idTienda = dataStore.getInt(5);
 					boolean admin = dataStore.getBoolean(6);
-					
 					shops.add(new Shop(idTienda, owner, location, admin));
 					shop = Shop.getShopByLocation(location);
 				}
@@ -225,9 +214,8 @@ public class Shop {
 				int index = 0;
 				for(int len=rows.length; index<len; index++) {
 					RowStore row = rows[index];
-					if(row == null) {
+					if(row == null)
 						break;
-					}
 				}
 				if(index >= rows.length)
 					continue;
@@ -247,7 +235,6 @@ public class Shop {
 				Map<String, Object> itemOutRaw = configOut.getValues(true);
 				ItemStack itemOut = ItemStack.deserialize(itemOutRaw);
 				boolean broadcast = dataStore.getBoolean(7);
-				
 				rows[index] = new RowStore(itemOut, itemIn, broadcast);
 			}
 			
@@ -256,15 +243,12 @@ public class Shop {
 			Bukkit.shutdown();
 		} finally {
 			try {
-				if(loadStocks != null) {
+				if(loadStocks != null)
 					loadStocks.close();
-				}
-				if(loadRows != null) {
+				if(loadRows != null)
 					loadRows.close();
-				}
-				if(loadShops != null) {
+				if(loadShops != null)
 					loadShops.close();
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -273,7 +257,6 @@ public class Shop {
 	
 	public static void saveData() {
 		StockShop.saveData();
-		
 		PreparedStatement stmt = null;
 		try {
 			stmt = TradingShops.getConnection().prepareStatement("DELETE FROM zooMercaTiendasFilas;");
@@ -282,9 +265,8 @@ public class Shop {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt != null) {
+				if(stmt != null)
 					stmt.close();
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -305,9 +287,8 @@ public class Shop {
 	
 	private void saveDataShop() {
 		for(RowStore row : rows) {
-			if(row != null) {
+			if(row != null)
 				row.saveData(idTienda);
-			}
 		}
 	}
 	
@@ -397,7 +378,6 @@ public class Shop {
 	
 	public void giveItem(ItemStack item) {
 		ItemStack copy = item.clone();
-		
 		int max = TradingShops.config.getInt("stockPages");
 		for(int i=0; i<max; i++) {
 			Optional<StockShop> stock = StockShop.getStockShopByOwner(this.owner, i);
@@ -420,16 +400,14 @@ public class Shop {
 		int max = TradingShops.config.getInt("stockPages");
 		for(int i=0; i<max; i++) {
 			Optional<StockShop> stock = StockShop.getStockShopByOwner(this.owner, i);
-			if(!stock.isPresent()) {
+			if(!stock.isPresent())
 				continue;
-			}
 			
 			Map<Integer, ItemStack> res = stock.get().getInventory().removeItem(copy);
-			if(res.isEmpty()) {
+			if(res.isEmpty())
 				break;
-			} else {
+			else
 				copy.setAmount(res.get(0).getAmount());
-			}
 		}
 		
 		InvStock.getInvStock(this.owner).refreshItems();
@@ -446,9 +424,8 @@ public class Shop {
 	public void deleteShop(boolean removalOfArray) {
 		if(removalOfArray) {
 			shops.remove(this);
-			if(TradingShops.config.getBoolean("deleteBlock")) {
+			if(TradingShops.config.getBoolean("deleteBlock"))
 				this.location.getBlock().setType(Material.AIR);
-			}
 		}
 
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {

@@ -23,27 +23,21 @@ public class RowStore {
 			YamlConfiguration configIn = new YamlConfiguration();
 			itemIn.serialize().forEach(configIn::set);
 			String itemInRaw = configIn.saveToString();
-			
 			stmt.setString(1, itemInRaw);
 			
 			YamlConfiguration configOut = new YamlConfiguration();
 			itemOut.serialize().forEach(configOut::set);
 			String itemOutRaw = configOut.saveToString();
-			
 			stmt.setString(2, itemOutRaw);
-			
 			stmt.setInt(3, idTienda);
-			
 			stmt.setBoolean(4, broadcast);
-			
 			stmt.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt != null) {
+				if(stmt != null)
 					stmt.close();
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

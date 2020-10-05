@@ -57,11 +57,10 @@ public abstract class GUI {
 	
 	public void placeItem(int slot, ItemStack item, GUIAction action) {
 		inventory.setItem(slot, item);
-		if(action != null) {
+		if(action != null)
 			actions.put(slot, action);
-		} else {
+		else
 			actions.remove(slot);
-		}
 	}
 	
 	public void placeItem(int slot, ItemStack item) {
@@ -71,9 +70,10 @@ public abstract class GUI {
 	public void open(Player player, UUID uuid) {
 		player.openInventory(inventory);
 		inventoriesOpen.put(player.getName(), this);
-		if(uuid != null) {
+		if(uuid != null)
 			inShopInv.putIfAbsent(player, uuid);
-		} else { inShopInv.putIfAbsent(player, player.getUniqueId());  }
+		else
+			inShopInv.putIfAbsent(player, player.getUniqueId());
 	}
 
 	public void open(Player player) { open(player, null); }

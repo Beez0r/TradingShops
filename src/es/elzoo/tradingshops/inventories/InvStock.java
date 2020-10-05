@@ -73,9 +73,9 @@ public class InvStock extends GUI {
 	}
 	
 	private void openPage(Player player, int pag) {
-		for(int i=45; i<54; i++) {
+		for(int i=45; i<54; i++)
 			placeItem(i, new ItemStack(Material.AIR));
-		}
+
 		player.closeInventory();
 		this.pag = pag;
 		this.open(player);

@@ -36,15 +36,13 @@ public class WorldGuardLoader {
 			if(regions != null) {
 				regions.getRegions().forEach((id, region) -> {
 					if(region.getId().equalsIgnoreCase(ProtectedRegion.GLOBAL_REGION) || region.contains(block.getX(), block.getY(), block.getZ())) {
-						if((region.getFlag(TradingShops.wgLoader.getFlagTrade().get()) != null) && Objects.equals(region.getFlag(TradingShops.wgLoader.getFlagTrade().get()), StateFlag.State.ALLOW)) {
+						if((region.getFlag(TradingShops.wgLoader.getFlagTrade().get()) != null) && Objects.equals(region.getFlag(TradingShops.wgLoader.getFlagTrade().get()), StateFlag.State.ALLOW))
 							isShopLoc.set(true);
-						}
 					}
 				});
 			}
-		} else {
+		} else
 			isShopLoc.set(true);
-		}
 		
 		return isShopLoc.get();
 	}

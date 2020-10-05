@@ -55,14 +55,20 @@ usePermissions: true
 # Set to -1 to disable the limit
 defaultShopLimit: 5
 
-# Allow managing the shop remotely using "/shop view <id>" command.
+# Allow managing the shop remotely using "/shop manage <id>" command.
 remoteManage: true
+
+# Allow anyone to use "/shop view <id>" command to view other players shop remotely
+remoteShopping: false
+
+# Allow public use of "/shop list <player>" command
+publicListCommand: false
 
 #TRANSLATIONS
 noPermissions: "&cYou do not have permission for this command!"
 shopNotOwned: "&cYou do not own this shop!"
-shopDeleted: "&7Your shop has been &cDELETED&7!"
-shopCreated: "&7Your shop has been &aCREATED&7!"
+shopDeleted: "&7Targeted shop has been &cDELETED&7!"
+shopCreated: "&7Targeted shop has been &aCREATED&7!"
 shopLimit: "&cYou do not have permission or reached your shops amount limit!"
 noItems: "&cYou do not have enough item(s) to buy from this shop!"
 noStock: "&cThis shop is currently out of stock of that item(s)!"
@@ -89,6 +95,7 @@ playerInventoryFull: "&cYour inventory is FULL! Cannot buy any items!"
 noPlayerShop: "&cPlayer name does not exist! Cannot list player shop!"
 noPlayerFound: "&cPlayer cannot be found!"
 noRemoteManage: "&cRemote management of shops has been disabled!"
+noRemoteShops: "&cRemote shopping has been disabled!"
 noShopFound: "&cNo shop can be found!"
 playerShopCreated: "&7Shop has been &aCREATED&7 for&a %p &7!"
 shopIDDeleted: "&cShop id&a %id &chas been DELETED!"

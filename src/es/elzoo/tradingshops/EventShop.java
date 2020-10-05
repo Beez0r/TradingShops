@@ -9,14 +9,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class EventShop implements Listener {
-	public static final List<String> playersCreating = new ArrayList<>();
-	public static final List<String> playersCreatingAdmin = new ArrayList<>();
-	public static final List<String> playersDeleting = new ArrayList<>();
 	private static boolean isShopLoc = false;
 	
 	@EventHandler
@@ -35,9 +30,8 @@ public class EventShop implements Listener {
 				match = null;
 			}
 
-			if(match == null) {
+			if(match == null)
 				match = Material.JUKEBOX;
-			}
 		}
 
 		if(block == null || !block.getType().equals(match))
@@ -85,14 +79,12 @@ public class EventShop implements Listener {
 				match = null;
 			}
 
-			if(match == null) {
+			if(match == null)
 				match = Material.JUKEBOX;
-			}
 		}
 
-		if(block == null || !block.getType().equals(match)) {
+		if(block == null || !block.getType().equals(match))
 			return;
-		}
 
 		if(TradingShops.wgLoader != null)
 			isShopLoc = TradingShops.wgLoader.checkRegion(block);

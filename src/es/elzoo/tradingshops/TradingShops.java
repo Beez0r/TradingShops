@@ -38,7 +38,6 @@ public class TradingShops extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		chainConnect = "jdbc:sqlite:"+getDataFolder().getAbsolutePath()+"/shops.db";
-
 		this.setupEconomy();
 		this.createConfig();
 
@@ -127,18 +126,16 @@ public class TradingShops extends JavaPlugin {
 
 	public static void checkConnection() {
 		try {
-			if(connection == null || connection.isClosed() || !connection.isValid(0)) {
+			if(connection == null || connection.isClosed() || !connection.isValid(0))
 				connection = DriverManager.getConnection(chainConnect);
-			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	private boolean setupEconomy() {
-		if(getServer().getPluginManager().getPlugin("Vault") == null) {
+		if(getServer().getPluginManager().getPlugin("Vault") == null)
 			return false;
-		}
 
 		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
 		if(rsp == null)
@@ -213,6 +210,8 @@ public class TradingShops extends JavaPlugin {
 					config.set("enableStockBlock", true);
 					config.set("enableAdminShop", true);
 					config.set("enableShopBlock", true);
+					config.set("remoteShopping", false);
+					config.set("publicListCommand", false);
 					config.set("noPlayerFound", "&cNo stock can be found for given player!");
 					config.set("noRemoteManage", "&cRemote management of shops has been disabled!");
 					config.set("noShopFound", "&cNo shop found with given id!");
@@ -223,6 +222,7 @@ public class TradingShops extends JavaPlugin {
 					config.set("disabledShopBlock", "&cCannot create shop location when shop blocks are disabled!");
 					config.set("adminShopDisabled", "&cAdmin shops have been disabled, cannot create!");
 					config.set("existingShop","&cCannot create shop where existing shop is already located!");
+					config.set("noRemoteShops","&cRemote shopping has been disabled!");
 					config.save(configFile);
 					config.set("configVersion", 2.2);
 				case "2.2":
