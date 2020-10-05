@@ -177,8 +177,6 @@ public class TradingShops extends JavaPlugin {
 					config.set("defaultShopLimit", 5);
 				case "1.4":
 					config.set("noPermissions", "&cYou do not have permission for this command!");
-					config.set("deleteShop", "&7Click on the shop you want to &cDELETE&7!");
-					config.set("createShop", "&7Click the BARREL you want to create the shop on!");
 					config.set("shopNotOwned", "&cYou do not own this shop!");
 					config.set("shopDeleted", "&7Your shop has been &cDELETED&7!");
 					config.set("shopCreated", "&7Your shop has been &aCREATED&7!");
@@ -224,6 +222,7 @@ public class TradingShops extends JavaPlugin {
 					config.set("targetMismatch", "&cTargeted block must match shop block set in config!");
 					config.set("disabledShopBlock", "&cCannot create shop location when shop blocks are disabled!");
 					config.set("adminShopDisabled", "&cAdmin shops have been disabled, cannot create!");
+					config.set("existingShop","&cCannot create shop where existing shop is already located!");
 					config.save(configFile);
 					config.set("configVersion", 2.2);
 				case "2.2":

@@ -60,8 +60,6 @@ remoteManage: true
 
 #TRANSLATIONS
 noPermissions: "&cYou do not have permission for this command!"
-deleteShop: "&7Click on the shop you want to &cDELETE&7! Will only work on next clicked block!"
-createShop: "&7Click the BARREL you want to &aCREATE&7 your shop at! Will only work on next clicked block!"
 shopNotOwned: "&cYou do not own this shop!"
 shopDeleted: "&7Your shop has been &cDELETED&7!"
 shopCreated: "&7Your shop has been &aCREATED&7!"
@@ -91,13 +89,14 @@ playerInventoryFull: "&cYour inventory is FULL! Cannot buy any items!"
 noPlayerShop: "&cPlayer name does not exist! Cannot list player shop!"
 noPlayerFound: "&cPlayer cannot be found!"
 noRemoteManage: "&cRemote management of shops has been disabled!"
-noShopFound: "&cNo shop found with given id!"
+noShopFound: "&cNo shop can be found!"
 playerShopCreated: "&7Shop has been &aCREATED&7 for&a %p &7!"
 shopIDDeleted: "&cShop id&a %id &chas been DELETED!"
 shopIntegerError: "&cShop id must be an integer greater than 0!"
-targetMismatch: "&cTargeted block must match shop block set in config!"
+targetMismatch: "&cTargeted block must match set shop block!"
 disabledShopBlock: "&cCannot create shop location when shop blocks are disabled!"
 adminShopDisabled: "&cAdmin shops have been disabled, cannot create!"
+existingShop: "&cCannot create shop where existing shop is already located!"
 
 # Do not edit this
 configVersion: 2.2

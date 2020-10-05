@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.util.UUID;
 
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.block.Block;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +17,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -86,12 +88,86 @@ public class CommandShop implements CommandExecutor {
 			player.sendMessage(Messages.NO_PERMISSION.toString());
 			return;
 		}
+		if(!TradingShops.config.getBoolean("enableShopBlock")) {
+			player.sendMessage(Messages.DISABLED_SHOP_BLOCK.toString());
+			return;
+		}
 
-		if (!EventShop.playersCreating.contains(player.getName()))
-			EventShop.playersCreating.add(player.getName());
+		Block block = player.getTargetBlock((Set<Material>) null, 5);
+		String shopBlock = TradingShops.config.getString("shopBlock");
 
-		EventShop.playersDeleting.remove(player.getName());
-		player.sendMessage(Messages.SHOP_CREATE.toString());
+		Material match = Material.matchMaterial(shopBlock);
+		if(match == null) {
+			try {
+				match = Material.matchMaterial(shopBlock.split("minecraft:")[1].toUpperCase());
+			} catch(Exception ignored) { }
+
+			if(match == null) {
+				match = Material.JUKEBOX;
+			}
+		}
+		boolean isShopLoc;
+		if(TradingShops.wgLoader != null)
+			isShopLoc = TradingShops.wgLoader.checkRegion(block);
+		else
+			isShopLoc = true;
+
+		Optional<Shop> shop = Shop.getShopByLocation(block.getLocation());
+		if(shop.isPresent() || !isShopLoc) {
+			player.sendMessage(Messages.EXISTING_SHOP.toString());
+			return;
+		}
+
+		if(!block.getType().equals(match)) {
+			player.sendMessage(Messages.TARGET_MISMATCH.toString());
+			return;
+		}
+
+		int maxShops = 0;
+		String permPrefix = Permission.SHOP_LIMIT_PREFIX.toString();
+		for(PermissionAttachmentInfo attInfo : player.getEffectivePermissions()) {
+			String perm = attInfo.getPermission();
+			if(perm.startsWith(permPrefix)) {
+				int num = 0;
+				try {
+					num = Integer.parseInt(perm.substring(perm.lastIndexOf(".")+1));
+				} catch(Exception e) { num = 0; }
+					if(num > maxShops)
+						maxShops = num;
+			}
+		}
+
+		boolean limitShops = true;
+		int numShops = Shop.getNumShops(player.getUniqueId());
+		if(TradingShops.config.getBoolean("usePermissions")) {
+			limitShops = numShops >= maxShops;
+		} else {
+			int numConfig = TradingShops.config.getInt("defaultShopLimit");
+			limitShops = numShops >= numConfig && numConfig >= 0;
+		}
+		if(player.hasPermission(Permission.SHOP_LIMIT_BYPASS.toString()))
+			limitShops = false;
+
+		if(limitShops) {
+			player.sendMessage(Messages.SHOP_MAX.toString());
+			return;
+		}
+
+		double cost = TradingShops.config.getDouble("createCost");
+		Optional<Economy> economy = TradingShops.getEconomy();
+		if(cost > 0 && economy.isPresent()) {
+			OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(player.getUniqueId());
+			EconomyResponse res = economy.get().withdrawPlayer(offPlayer, cost);
+			if(!res.transactionSuccess()) {
+				player.sendMessage(Messages.SHOP_CREATE_NO_MONEY.toString()+cost);
+				return;
+			}
+		}
+
+		Shop newShop = Shop.createShop(block.getLocation(), player.getUniqueId());
+		player.sendMessage(Messages.SHOP_CREATED.toString());
+		InvAdminShop inv = new InvAdminShop(newShop);
+		inv.open(player, newShop.getOwner());
 	}
 
 	private void createShop(Player player, String playerShop) {
@@ -149,7 +225,7 @@ public class CommandShop implements CommandExecutor {
 			InvAdminShop inv = new InvAdminShop(newShop);
 			inv.open(player, newShop.getOwner());
 		} else {
-			player.sendMessage(ChatColor.RED + "[TradingShops] Cannot create shop where existing shop is already located!");
+			player.sendMessage(Messages.EXISTING_SHOP.toString());
 		}
 	}
 
@@ -164,19 +240,41 @@ public class CommandShop implements CommandExecutor {
 			return;
 		}
 
-		if (!EventShop.playersCreatingAdmin.contains(player.getName()))
-			EventShop.playersCreatingAdmin.add(player.getName());
-
-		EventShop.playersDeleting.remove(player.getName());
-		player.sendMessage(Messages.SHOP_CREATE.toString());
+		Block block = player.getTargetBlock((Set<Material>) null, 5);
+		Shop newShop = Shop.createShop(block.getLocation(), player.getUniqueId(), true);
+		player.sendMessage(Messages.SHOP_CREATED.toString());
+		InvAdminShop inv = new InvAdminShop(newShop);
+		inv.open(player, newShop.getOwner());
 	}
 
 	private void deleteShop(Player player) {
-		if (!EventShop.playersDeleting.contains(player.getName()))
-			EventShop.playersDeleting.add(player.getName());
+		Block block = player.getTargetBlock((Set<Material>) null, 5);
+		Optional<Shop> shop = Shop.getShopByLocation(block.getLocation());
+		if(!shop.isPresent()) {
+			player.sendMessage(Messages.SHOP_NOT_FOUND.toString());
+			return;
+		}
 
-		EventShop.playersCreating.remove(player.getName());
-		player.sendMessage(Messages.SHOP_CLEAR.toString());
+		if(shop.get().isAdmin()) {
+			if(!player.hasPermission(Permission.SHOP_ADMIN.toString())) {
+				player.sendMessage(Messages.NO_PERMISSION.toString());
+				return;
+			}
+		} else if(!shop.get().isOwner(player.getUniqueId()) && !player.hasPermission(Permission.SHOP_ADMIN.toString())) {
+			player.sendMessage(Messages.SHOP_NO_SELF.toString());
+			return;
+		}
+
+		double cost = TradingShops.config.getDouble("returnAmount");
+		Optional<Economy> economy = TradingShops.getEconomy();
+		if(cost > 0 && economy.isPresent()) {
+			OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(shop.get().getOwner());
+			economy.get().depositPlayer(offPlayer, cost);
+		}
+
+		shop.get().deleteShop();
+		player.sendMessage(Messages.SHOP_DELETED.toString());
+
 	}
 
 	private void deleteShopID(Player player, String shopId) {
