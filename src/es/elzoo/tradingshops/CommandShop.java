@@ -28,42 +28,40 @@ import es.elzoo.tradingshops.inventories.InvStock;
 public class CommandShop implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(!(sender instanceof Player)) {
+		if(!(sender instanceof Player))
 			return false;
-		}
 		Player player = (Player) sender;
 
-		if (args.length == 0) {
+		if(args.length == 0)
 			listSubCmd(player, label);
-		} else if (args[0].equalsIgnoreCase("create")) {
+		else if(args[0].equalsIgnoreCase("create"))
 			createStore(player);
-		} else if (args[0].equalsIgnoreCase("adminshop")) {
+		else if(args[0].equalsIgnoreCase("adminshop"))
 			adminShop(player);
-		} else if (args[0].equalsIgnoreCase("delete")) {
+		else if(args[0].equalsIgnoreCase("delete"))
 			deleteShop(player);
-		} else if (args[0].equalsIgnoreCase("deleteid") && args.length >= 2) {
+		else if(args[0].equalsIgnoreCase("deleteid") && args.length >= 2)
 			deleteShopID(player, args[1]);
-		} else if (args[0].equalsIgnoreCase("stock")) {
+		else if(args[0].equalsIgnoreCase("stock"))
 			stockShop(player);
-		} else if (args[0].equalsIgnoreCase("reload")) {
+		else if(args[0].equalsIgnoreCase("reload"))
 			reloadShop(player);
-		} else if (args[0].equalsIgnoreCase("list") && args.length == 1) {
+		else if(args[0].equalsIgnoreCase("list") && args.length == 1)
 			Bukkit.getServer().getScheduler().runTaskAsynchronously(TradingShops.getPlugin(), () -> listShops(player, null));
-		} else if (args[0].equalsIgnoreCase("list") && args.length >= 2) {
+		else if(args[0].equalsIgnoreCase("list") && args.length >= 2)
 			Bukkit.getServer().getScheduler().runTaskAsynchronously(TradingShops.getPlugin(), () -> listShops(player, args[1]));
-		} else if (args[0].equalsIgnoreCase("manage") && args.length >= 2) {
+		else if(args[0].equalsIgnoreCase("manage") && args.length >= 2)
 			shopManage(player, args[1]);
-		} else if (args[0].equalsIgnoreCase("view") && args.length >= 2) {
+		else if(args[0].equalsIgnoreCase("view") && args.length >= 2)
 			viewShop(player, args[1]);
-		} else if (args[0].equalsIgnoreCase("manageshop") && args.length >= 2) {
+		else if(args[0].equalsIgnoreCase("manageshop") && args.length >= 2)
 			manageShop(player, args[1]);
-		} else if (args[0].equalsIgnoreCase("managestock") && args.length >= 2) {
+		else if(args[0].equalsIgnoreCase("managestock") && args.length >= 2)
 			manageStock(player, args[1]);
-		} else if (args[0].equalsIgnoreCase("createshop") && args.length >= 2) {
+		else if(args[0].equalsIgnoreCase("createshop") && args.length >= 2)
 			createShop(player, args[1]);
-		} else {
+		else
 			listSubCmd(player, label);
-		}
 
 		return true;
 	}
@@ -77,7 +75,7 @@ public class CommandShop implements CommandExecutor {
 		player.sendMessage(ChatColor.GRAY + "/" + label + " manage <id>");
 		player.sendMessage(ChatColor.GRAY + "/" + label + " stock");
 		player.sendMessage(ChatColor.GRAY + "/" + label + " view <id>");
-		if (player.hasPermission(Permission.SHOP_ADMIN.toString())) {
+		if(player.hasPermission(Permission.SHOP_ADMIN.toString())) {
 			player.sendMessage(ChatColor.GRAY + "/" + label + " adminshop");
 			player.sendMessage(ChatColor.GRAY + "/" + label + " createshop <player>");
 			player.sendMessage(ChatColor.GRAY + "/" + label + " list <player>");
@@ -106,9 +104,8 @@ public class CommandShop implements CommandExecutor {
 				match = Material.matchMaterial(shopBlock.split("minecraft:")[1].toUpperCase());
 			} catch(Exception ignored) { }
 
-			if(match == null) {
+			if(match == null)
 				match = Material.JUKEBOX;
-			}
 		}
 		boolean isShopLoc;
 		if(TradingShops.wgLoader != null)
@@ -281,6 +278,11 @@ public class CommandShop implements CommandExecutor {
 			return;
 		}
 
+		if(InvStock.inShopInv.containsValue(shop.get().getOwner())) {
+			player.sendMessage(Messages.SHOP_BUSY.toString());
+			return;
+		}
+
 		if(shop.get().isAdmin()) {
 			if(!player.hasPermission(Permission.SHOP_ADMIN.toString())) {
 				player.sendMessage(Messages.NO_PERMISSION.toString());
@@ -319,14 +321,14 @@ public class CommandShop implements CommandExecutor {
 			return;
 		}
 
-		if(!shop.get().isOwner(player.getUniqueId()) && !player.hasPermission(Permission.SHOP_ADMIN.toString())) {
-				player.sendMessage(Messages.SHOP_NO_SELF.toString());
-				return;
-		}
-
 		if(InvStock.inShopInv.containsValue(shop.get().getOwner())) {
 			player.sendMessage(Messages.SHOP_BUSY.toString());
 			return;
+		}
+
+		if(!shop.get().isOwner(player.getUniqueId()) && !player.hasPermission(Permission.SHOP_ADMIN.toString())) {
+				player.sendMessage(Messages.SHOP_NO_SELF.toString());
+				return;
 		}
 
 		if(shop.get().isAdmin()) {
